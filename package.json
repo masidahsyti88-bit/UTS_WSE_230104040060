@@ -1,0 +1,14 @@
+{
+    "name": "uts-wse-230104040060",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}
