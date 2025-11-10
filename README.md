@@ -31,6 +31,3 @@ npm run dev
 | PUT | /api/students/:id | Mengupdate data mahasiswa |
 | DELETE | /api/students/:id | Menghapus data mahasiswa |
 | GET | /api/info | Informasi API |
-
-## Contoh Hasil (Screenshot Postman)
-*(akan ditambahkan)*
