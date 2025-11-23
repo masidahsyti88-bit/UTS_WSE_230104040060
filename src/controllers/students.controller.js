@@ -1,22 +1,39 @@
-import { students } from "../data/students.data.js";
+import { students } from "../data/students.js";
 
-export const getStudents = (req, res) => {
-    res.status(200).json({ status: "success", data: students });
+// GET ALL
+export const getAllStudents = (req, res) => {
+    res.status(200).json({
+        success: true,
+        data: students
+    });
 };
 
+// GET BY ID
 export const getStudentById = (req, res) => {
-    const student = students.find(s => s.id == req.params.id);
-    if (!student) return res.status(404).json({ status: "fail", message: "Data tidak ditemukan" });
-    res.status(200).json({ status: "success", data: student });
+    const id = Number(req.params.id);
+    const student = students.find(s => s.id === id);
+
+    if (!student) {
+        return res.status(404).json({
+            status: 404,
+            message: "Student not found"
+        });
+    }
+
+    res.status(200).json({
+        success: true,
+        data: student
+    });
 };
 
-export const createStudent = (req, res) => {
+// POST (ADD NEW)
+export const addStudent = (req, res) => {
     const { name, npm, major } = req.body;
 
     if (!name || !npm || !major) {
         return res.status(400).json({
-            status: "fail",
-            message: "Field 'name', 'npm', dan 'major' wajib diisi"
+            status: 400,
+            message: "name, npm, major wajib diisi"
         });
     }
 
@@ -28,42 +45,53 @@ export const createStudent = (req, res) => {
     };
 
     students.push(newStudent);
-    res.status(201).json({ status: "success", data: newStudent });
-};
 
-export const updateStudent = (req, res) => {
-    const student = students.find(s => s.id == req.params.id);
-    if (!student) return res.status(404).json({ status: "fail", message: "Data tidak ditemukan" });
-
-    const { name, npm, major } = req.body;
-    if (!name || !npm || !major) {
-        return res.status(400).json({
-            status: "fail",
-            message: "Semua field wajib diisi"
-        });
-    }
-
-    student.name = name;
-    student.npm = npm;
-    student.major = major;
-
-    res.status(200).json({ status: "success", data: student });
-};
-
-export const deleteStudent = (req, res) => {
-    const index = students.findIndex(s => s.id == req.params.id);
-
-    if (index === -1) {
-        return res.status(404).json({
-            status: "fail",
-            message: "Data tidak ditemukan"
-        });
-    }
-
-    students.splice(index, 1);
-
-    return res.status(200).json({
-        status: "success",
-        message: "Data berhasil dihapus"
+    res.status(201).json({
+        message: "Student added successfully",
+        data: newStudent
     });
+};
+
+// UPDATE
+export const updateStudent = (req, res) => {
+    const id = Number(req.params.id);
+    const { name, npm, major } = req.body;
+
+    const idx = students.findIndex(s => s.id === id);
+
+    if (idx === -1) {
+        return res.status(404).json({
+            status: 404,
+            message: "Student not found"
+        });
+    }
+
+    students[idx] = {
+        id,
+        name: name || students[idx].name,
+        npm: npm || students[idx].npm,
+        major: major || students[idx].major
+    };
+
+    res.status(200).json({
+        message: "Student updated",
+        data: students[idx]
+    });
+};
+
+// DELETE
+export const deleteStudent = (req, res) => {
+    const id = Number(req.params.id);
+    const idx = students.findIndex(s => s.id === id);
+
+    if (idx === -1) {
+        return res.status(404).json({
+            status: 404,
+            message: "Student not found"
+        });
+    }
+
+    students.splice(idx, 1);
+
+    res.status(204).send();
 };
